@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using AIProxy;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 
@@ -12,8 +13,8 @@ public class PromptFunctions_Inline(ITestOutputHelper output) : BaseTest(output)
     {
         Console.WriteLine("======== Inline Function Definition ========");
 
-        string openAIModelId = TestConfiguration.OpenAI.ChatModelId;
-        string openAIApiKey = TestConfiguration.OpenAI.ApiKey;
+        string openAIModelId = TestConfiguration.ZhipuAI.ChatModelId;
+        string openAIApiKey = TestConfiguration.ZhipuAI.ApiKey;
 
         if (openAIModelId is null || openAIApiKey is null)
         {
@@ -28,7 +29,7 @@ public class PromptFunctions_Inline(ITestOutputHelper output) : BaseTest(output)
          */
 
         Kernel kernel = Kernel.CreateBuilder()
-            .AddOpenAIChatCompletion(
+            .AddZhipuAIProxyChatCompletion(
                 modelId: openAIModelId,
                 apiKey: openAIApiKey)
             .Build();
@@ -55,7 +56,7 @@ Event: {{$input}}
         result = await kernel.InvokeAsync(excuseFunction, new() { ["input"] = "sorry I forgot your birthday" });
         Console.WriteLine(result.GetValue<string>());
 
-        var fixedFunction = kernel.CreateFunctionFromPrompt($"Translate this date {DateTimeOffset.Now:f} to French format", new OpenAIPromptExecutionSettings() { MaxTokens = 100 });
+        var fixedFunction = kernel.CreateFunctionFromPrompt($"Translate this date {DateTimeOffset.Now:f} to Chinese format", new OpenAIPromptExecutionSettings() { MaxTokens = 512 });
 
         result = await kernel.InvokeAsync(fixedFunction);
         Console.WriteLine(result.GetValue<string>());

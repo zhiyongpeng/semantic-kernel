@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using AIProxy;
 using Microsoft.SemanticKernel;
 
 namespace Functions;
@@ -13,9 +14,9 @@ public class FunctionResult_Metadata(ITestOutputHelper output) : BaseTest(output
 
         // Create kernel
         var kernel = Kernel.CreateBuilder()
-            .AddOpenAIChatCompletion(
-                modelId: TestConfiguration.OpenAI.ChatModelId,
-                apiKey: TestConfiguration.OpenAI.ApiKey)
+            .AddZhipuAIProxyChatCompletion(
+                modelId: TestConfiguration.ZhipuAI.ChatModelId,
+                apiKey: TestConfiguration.ZhipuAI.ApiKey)
             .Build();
 
         // Create function
@@ -38,9 +39,9 @@ public class FunctionResult_Metadata(ITestOutputHelper output) : BaseTest(output
 
         // Create kernel
         var kernel = Kernel.CreateBuilder()
-            .AddOpenAIChatCompletion(
-                modelId: TestConfiguration.OpenAI.ChatModelId,
-                apiKey: TestConfiguration.OpenAI.ApiKey)
+            .AddZhipuAIProxyChatCompletion(
+                modelId: TestConfiguration.ZhipuAI.ChatModelId,
+                apiKey: TestConfiguration.ZhipuAI.ApiKey)
             .Build();
 
         // Create function
@@ -60,9 +61,9 @@ public class FunctionResult_Metadata(ITestOutputHelper output) : BaseTest(output
     public async Task GetMetadataFromStreamAsync()
     {
         var kernel = Kernel.CreateBuilder()
-            .AddOpenAIChatCompletion(
-                modelId: TestConfiguration.OpenAI.ChatModelId,
-                apiKey: TestConfiguration.OpenAI.ApiKey)
+            .AddZhipuAIProxyChatCompletion(
+                modelId: TestConfiguration.ZhipuAI.ChatModelId,
+                apiKey: TestConfiguration.ZhipuAI.ApiKey)
             .Build();
 
         // Create function

@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using AIProxy;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
 using Microsoft.SemanticKernel.PromptTemplates.Liquid;
@@ -22,12 +23,9 @@ public class MultiplePromptTemplates(ITestOutputHelper output) : BaseTest(output
         Console.WriteLine($"======== {nameof(MultiplePromptTemplates)} ========");
 
         Kernel kernel = Kernel.CreateBuilder()
-            .AddAzureOpenAIChatCompletion(
-                deploymentName: TestConfiguration.AzureOpenAI.ChatDeploymentName,
-                endpoint: TestConfiguration.AzureOpenAI.Endpoint,
-                serviceId: "AzureOpenAIChat",
-                apiKey: TestConfiguration.AzureOpenAI.ApiKey,
-                modelId: TestConfiguration.AzureOpenAI.ChatModelId)
+            .AddZhipuAIProxyChatCompletion(
+                apiKey: TestConfiguration.ZhipuAI.ApiKey,
+                modelId: TestConfiguration.ZhipuAI.ChatModelId)
             .Build();
 
         var promptTemplateFactory = new AggregatorPromptTemplateFactory(

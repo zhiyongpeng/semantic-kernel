@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using AIProxy;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.PromptTemplates.Liquid;
@@ -13,9 +14,9 @@ public class PromptyFunction(ITestOutputHelper output) : BaseTest(output)
     public async Task InlineFunctionAsync()
     {
         Kernel kernel = Kernel.CreateBuilder()
-            .AddOpenAIChatCompletion(
-                modelId: TestConfiguration.OpenAI.ChatModelId,
-                apiKey: TestConfiguration.OpenAI.ApiKey)
+            .AddZhipuAIProxyChatCompletion(
+                modelId: TestConfiguration.ZhipuAI.ChatModelId,
+                apiKey: TestConfiguration.ZhipuAI.ApiKey)
             .Build();
 
         string promptTemplate = """
@@ -44,9 +45,9 @@ public class PromptyFunction(ITestOutputHelper output) : BaseTest(output)
     public async Task InlineFunctionWithVariablesAsync()
     {
         Kernel kernel = Kernel.CreateBuilder()
-            .AddOpenAIChatCompletion(
-                modelId: TestConfiguration.OpenAI.ChatModelId,
-                apiKey: TestConfiguration.OpenAI.ApiKey)
+            .AddZhipuAIProxyChatCompletion(
+                modelId: TestConfiguration.ZhipuAI.ChatModelId,
+                apiKey: TestConfiguration.ZhipuAI.ApiKey)
             .Build();
 
         string promptyTemplate = """
@@ -109,9 +110,9 @@ public class PromptyFunction(ITestOutputHelper output) : BaseTest(output)
     public async Task RenderPromptAsync()
     {
         Kernel kernel = Kernel.CreateBuilder()
-            .AddOpenAIChatCompletion(
-                modelId: TestConfiguration.OpenAI.ChatModelId,
-                apiKey: TestConfiguration.OpenAI.ApiKey)
+            .AddZhipuAIProxyChatCompletion(
+                modelId: TestConfiguration.ZhipuAI.ChatModelId,
+                apiKey: TestConfiguration.ZhipuAI.ApiKey)
             .Build();
 
         string promptyTemplate = """

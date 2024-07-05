@@ -23,12 +23,12 @@ public abstract class BaseTest
     /// </summary>
     public BaseTest Console => this;
 
-    protected bool UseOpenAIConfig => this.ForceOpenAI || string.IsNullOrEmpty(TestConfiguration.AzureOpenAI.Endpoint);
+    protected bool UseOpenAIConfig => this.ForceOpenAI || string.IsNullOrEmpty(TestConfiguration.ZhipuAI.ApiKey);
 
     protected string ApiKey =>
         this.UseOpenAIConfig ?
             TestConfiguration.OpenAI.ApiKey :
-            TestConfiguration.AzureOpenAI.ApiKey;
+            TestConfiguration.ZhipuAI.ApiKey;
 
     protected string? Endpoint => UseOpenAIConfig ? null : TestConfiguration.AzureOpenAI.Endpoint;
 

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System.ComponentModel;
+using AIProxy;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
@@ -225,14 +226,14 @@ public sealed class OpenAI_ReasonedFunctionCalling(ITestOutputHelper output) : B
     private Kernel CreateKernelWithPlugin<T>()
     {
         // Create a logging handler to output HTTP requests and responses
-        var handler = new LoggingHandler(new HttpClientHandler(), this.Output);
+        var handler = new LoggingHandler(new ZhipuAIRedirectingHandler(new HttpClientHandler()), this.Output);
         HttpClient httpClient = new(handler);
 
         // Create a kernel with OpenAI chat completion and WeatherPlugin
         IKernelBuilder kernelBuilder = Kernel.CreateBuilder();
         kernelBuilder.AddOpenAIChatCompletion(
-                modelId: TestConfiguration.OpenAI.ChatModelId!,
-                apiKey: TestConfiguration.OpenAI.ApiKey!,
+                modelId: TestConfiguration.ZhipuAI.ChatModelId!,
+                apiKey: TestConfiguration.ZhipuAI.ApiKey!,
                 httpClient: httpClient);
         kernelBuilder.Plugins.AddFromType<T>();
         Kernel kernel = kernelBuilder.Build();

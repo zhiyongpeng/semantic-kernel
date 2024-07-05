@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using AIProxy;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
@@ -15,13 +16,13 @@ public class OpenAI_ChatCompletionStreaming(ITestOutputHelper output) : BaseTest
     /// This example demonstrates chat completion streaming using OpenAI.
     /// </summary>
     [Fact]
-    public Task StreamOpenAIChatAsync()
+    public async Task StreamOpenAIChatAsync()
     {
         Console.WriteLine("======== Open AI Chat Completion Streaming ========");
+        using var httpClient = new HttpClient(new ZhipuAIRedirectingHandler(new HttpClientHandler()));
+        OpenAIChatCompletionService chatCompletionService = new(TestConfiguration.ZhipuAI.ChatModelId, TestConfiguration.ZhipuAI.ApiKey, httpClient: httpClient);
 
-        OpenAIChatCompletionService chatCompletionService = new(TestConfiguration.OpenAI.ChatModelId, TestConfiguration.OpenAI.ApiKey);
-
-        return this.StartStreamingChatAsync(chatCompletionService);
+        await this.StartStreamingChatAsync(chatCompletionService);
     }
 
     /// <summary>

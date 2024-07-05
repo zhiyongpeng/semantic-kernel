@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using AIProxy;
 using Microsoft.SemanticKernel;
 
 namespace PromptTemplates;
@@ -15,11 +16,9 @@ public class PromptFunctionsWithChatGPT(ITestOutputHelper output) : BaseTest(out
         Console.WriteLine("======== Using Chat GPT model for text generation ========");
 
         Kernel kernel = Kernel.CreateBuilder()
-            .AddAzureOpenAIChatCompletion(
-                deploymentName: TestConfiguration.AzureOpenAI.ChatDeploymentName,
-                endpoint: TestConfiguration.AzureOpenAI.Endpoint,
-                apiKey: TestConfiguration.AzureOpenAI.ApiKey,
-                modelId: TestConfiguration.AzureOpenAI.ChatModelId)
+            .AddZhipuAIProxyChatCompletion(
+                apiKey: TestConfiguration.ZhipuAI.ApiKey,
+                modelId: TestConfiguration.ZhipuAI.ChatModelId)
             .Build();
 
         var func = kernel.CreateFunctionFromPrompt(

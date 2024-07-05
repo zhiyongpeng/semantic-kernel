@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System.ComponentModel;
+using AIProxy;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Planning;
 
@@ -45,9 +46,9 @@ public class WithFunctionCallingStepwisePlanner(ITestOutputHelper output) : Base
     private static Kernel InitializeKernel()
     {
         Kernel kernel = Kernel.CreateBuilder()
-            .AddOpenAIChatCompletion(
-                apiKey: TestConfiguration.OpenAI.ApiKey,
-                modelId: "gpt-3.5-turbo-1106")
+            .AddZhipuAIProxyChatCompletion(
+                apiKey: TestConfiguration.ZhipuAI.ApiKey,
+                modelId: TestConfiguration.ZhipuAI.ChatModelId)
             .Build();
 
         kernel.ImportPluginFromType<RetrievePlugin>();

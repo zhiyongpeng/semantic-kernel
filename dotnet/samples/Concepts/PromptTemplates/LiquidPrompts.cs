@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using AIProxy;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.PromptTemplates.Liquid;
 
@@ -11,9 +12,9 @@ public class LiquidPrompts(ITestOutputHelper output) : BaseTest(output)
     public async Task PromptWithVariablesAsync()
     {
         Kernel kernel = Kernel.CreateBuilder()
-            .AddOpenAIChatCompletion(
-                modelId: TestConfiguration.OpenAI.ChatModelId,
-                apiKey: TestConfiguration.OpenAI.ApiKey)
+            .AddZhipuAIProxyChatCompletion(
+                modelId: TestConfiguration.ZhipuAI.ChatModelId,
+                apiKey: TestConfiguration.ZhipuAI.ApiKey)
             .Build();
 
         string template = """

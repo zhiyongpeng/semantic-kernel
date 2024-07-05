@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using AIProxy;
 using Microsoft.SemanticKernel;
 
 namespace PromptTemplates;
@@ -16,9 +17,9 @@ public class ChatCompletionPrompts(ITestOutputHelper output) : BaseTest(output)
             """;
 
         var kernel = Kernel.CreateBuilder()
-            .AddOpenAIChatCompletion(
-                modelId: TestConfiguration.OpenAI.ChatModelId,
-                apiKey: TestConfiguration.OpenAI.ApiKey)
+            .AddZhipuAIProxyChatCompletion(
+                modelId: TestConfiguration.ZhipuAI.ChatModelId,
+                apiKey: TestConfiguration.ZhipuAI.ApiKey)
             .Build();
 
         var chatSemanticFunction = kernel.CreateFunctionFromPrompt(ChatPrompt);

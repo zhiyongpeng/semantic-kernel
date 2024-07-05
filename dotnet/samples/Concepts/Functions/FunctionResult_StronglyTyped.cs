@@ -2,6 +2,7 @@
 
 using System.Diagnostics;
 using System.Text.Json;
+using AIProxy;
 using Azure.AI.OpenAI;
 using Microsoft.SemanticKernel;
 
@@ -18,9 +19,9 @@ public class FunctionResult_StronglyTyped(ITestOutputHelper output) : BaseTest(o
         Console.WriteLine("======== Extended function result ========");
 
         Kernel kernel = Kernel.CreateBuilder()
-            .AddOpenAIChatCompletion(
-                modelId: TestConfiguration.OpenAI.ChatModelId,
-                apiKey: TestConfiguration.OpenAI.ApiKey)
+            .AddZhipuAIProxyChatCompletion(
+                modelId: TestConfiguration.ZhipuAI.ChatModelId,
+                apiKey: TestConfiguration.ZhipuAI.ApiKey)
             .Build();
 
         var promptTestDataGeneration = "Return a JSON with an array of 3 JSON objects with the following fields: " +

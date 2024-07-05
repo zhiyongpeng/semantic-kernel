@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using AIProxy;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
@@ -19,26 +20,23 @@ public class PromptFunctions_MultipleArguments(ITestOutputHelper output) : BaseT
     {
         Console.WriteLine("======== TemplateMethodFunctionsWithMultipleArguments ========");
 
-        string serviceId = TestConfiguration.AzureOpenAI.ServiceId;
-        string apiKey = TestConfiguration.AzureOpenAI.ApiKey;
-        string deploymentName = TestConfiguration.AzureOpenAI.ChatDeploymentName;
-        string modelId = TestConfiguration.AzureOpenAI.ChatModelId;
-        string endpoint = TestConfiguration.AzureOpenAI.Endpoint;
+        //string serviceId = TestConfiguration.AzureOpenAI.ServiceId;
+        //string apiKey = TestConfiguration.AzureOpenAI.ApiKey;
+        //string deploymentName = TestConfiguration.AzureOpenAI.ChatDeploymentName;
+        //string modelId = TestConfiguration.AzureOpenAI.ChatModelId;
+        //string endpoint = TestConfiguration.AzureOpenAI.Endpoint;
 
-        if (apiKey is null || deploymentName is null || modelId is null || endpoint is null)
-        {
-            Console.WriteLine("AzureOpenAI modelId, endpoint, apiKey, or deploymentName not found. Skipping example.");
-            return;
-        }
+        //if (apiKey is null || deploymentName is null || modelId is null || endpoint is null)
+        //{
+        //    Console.WriteLine("AzureOpenAI modelId, endpoint, apiKey, or deploymentName not found. Skipping example.");
+        //    return;
+        //}
 
         IKernelBuilder builder = Kernel.CreateBuilder();
         builder.Services.AddLogging(c => c.AddConsole());
-        builder.AddAzureOpenAIChatCompletion(
-            deploymentName: deploymentName,
-            endpoint: endpoint,
-            serviceId: serviceId,
-            apiKey: apiKey,
-            modelId: modelId);
+        builder.AddZhipuAIProxyChatCompletion(
+            apiKey: TestConfiguration.ZhipuAI.ApiKey,
+            modelId: TestConfiguration.ZhipuAI.ChatModelId);
         Kernel kernel = builder.Build();
 
         var arguments = new KernelArguments

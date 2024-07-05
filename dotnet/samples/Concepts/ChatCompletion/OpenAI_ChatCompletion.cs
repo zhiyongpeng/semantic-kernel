@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using AIProxy;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 
@@ -13,7 +14,8 @@ public class OpenAI_ChatCompletion(ITestOutputHelper output) : BaseTest(output)
     {
         Console.WriteLine("======== Open AI - ChatGPT ========");
 
-        OpenAIChatCompletionService chatCompletionService = new(TestConfiguration.OpenAI.ChatModelId, TestConfiguration.OpenAI.ApiKey);
+        using var httpClient = new HttpClient(new ZhipuAIRedirectingHandler(new HttpClientHandler()));
+        OpenAIChatCompletionService chatCompletionService = new(TestConfiguration.ZhipuAI.ChatModelId, TestConfiguration.ZhipuAI.ApiKey, httpClient: httpClient);
 
         await StartChatAsync(chatCompletionService);
 

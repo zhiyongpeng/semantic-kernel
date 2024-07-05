@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System.Globalization;
+using AIProxy;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Plugins.Core;
@@ -49,7 +50,7 @@ public class ChatWithPrompts(ITestOutputHelper output) : BaseTest(output)
         var userPromptTemplate = EmbeddedResource.Read("30-user-prompt.txt");
 
         Kernel kernel = Kernel.CreateBuilder()
-            .AddOpenAIChatCompletion(TestConfiguration.OpenAI.ChatModelId, TestConfiguration.OpenAI.ApiKey, serviceId: "chat")
+            .AddZhipuAIProxyChatCompletion(TestConfiguration.ZhipuAI.ChatModelId, TestConfiguration.ZhipuAI.ApiKey)
             .Build();
 
         // As an example, we import the time plugin, which is used in system prompt to read the current date.

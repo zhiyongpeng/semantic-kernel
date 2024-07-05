@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System.Text;
+using AIProxy;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
@@ -121,7 +122,7 @@ public class OpenAI_FunctionCalling(ITestOutputHelper output) : BaseTest(output)
 
             Console.WriteLine();
         }
-    }
+                 }
 
     /// <summary>
     /// This example demonstrates manual function calling with a streaming chat API.
@@ -294,9 +295,14 @@ public class OpenAI_FunctionCalling(ITestOutputHelper output) : BaseTest(output)
         // Create kernel
         IKernelBuilder builder = Kernel.CreateBuilder();
 
+        builder.Services.ConfigureHttpClientDefaults(b =>
+        {
+            b.ConfigurePrimaryHttpMessageHandler(() => new ZhipuAIRedirectingHandler(new HttpClientHandler()));
+        });
+
         // We recommend the usage of OpenAI latest models for the best experience with tool calling.
         // i.e. gpt-3.5-turbo-1106 or gpt-4-1106-preview
-        builder.AddOpenAIChatCompletion("gpt-3.5-turbo-1106", TestConfiguration.OpenAI.ApiKey);
+        builder.AddOpenAIChatCompletion(TestConfiguration.ZhipuAI.ChatModelId, TestConfiguration.ZhipuAI.ApiKey);
 
         builder.Services.AddLogging(services => services.AddConsole().SetMinimumLevel(LogLevel.Trace));
 
