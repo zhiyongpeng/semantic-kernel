@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System.ComponentModel;
+using AIProxy;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
@@ -18,8 +19,13 @@ public sealed class Step7_Observability(ITestOutputHelper output) : BaseTest(out
         // Create a kernel with OpenAI chat completion
         IKernelBuilder kernelBuilder = Kernel.CreateBuilder();
         kernelBuilder.AddOpenAIChatCompletion(
-                modelId: TestConfiguration.OpenAI.ChatModelId,
-                apiKey: TestConfiguration.OpenAI.ApiKey);
+                modelId: TestConfiguration.ZhipuAI.ChatModelId,
+                apiKey: TestConfiguration.ZhipuAI.ApiKey);
+
+        kernelBuilder.Services.ConfigureHttpClientDefaults(b =>
+        {
+            b.ConfigurePrimaryHttpMessageHandler(() => new ZhipuAIRedirectingHandler(new HttpClientHandler()));
+        });
 
         kernelBuilder.Plugins.AddFromType<TimeInformation>();
 
@@ -49,6 +55,11 @@ public sealed class Step7_Observability(ITestOutputHelper output) : BaseTest(out
         kernelBuilder.AddOpenAIChatCompletion(
                 modelId: TestConfiguration.OpenAI.ChatModelId,
                 apiKey: TestConfiguration.OpenAI.ApiKey);
+
+        kernelBuilder.Services.ConfigureHttpClientDefaults(b =>
+        {
+            b.ConfigurePrimaryHttpMessageHandler(() => new OpenAIRedirectingHandler(new HttpClientHandler()));
+        });
 
         kernelBuilder.Plugins.AddFromType<TimeInformation>();
 

@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using AIProxy;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 
@@ -18,6 +19,11 @@ public sealed class Step6_Responsible_AI(ITestOutputHelper output) : BaseTest(ou
             .AddOpenAIChatCompletion(
                 modelId: TestConfiguration.OpenAI.ChatModelId,
                 apiKey: TestConfiguration.OpenAI.ApiKey);
+
+        builder.Services.ConfigureHttpClientDefaults(b =>
+        {
+            b.ConfigurePrimaryHttpMessageHandler(() => new ZhipuAIRedirectingHandler(new HttpClientHandler()));
+        });
 
         builder.Services.AddSingleton<ITestOutputHelper>(this.Output);
 

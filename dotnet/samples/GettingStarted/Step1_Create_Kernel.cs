@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using AIProxy;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 
@@ -17,23 +19,30 @@ public sealed class Step1_Create_Kernel(ITestOutputHelper output) : BaseTest(out
     public async Task RunAsync()
     {
         // Create a kernel with OpenAI chat completion
-        Kernel kernel = Kernel.CreateBuilder()
+        IKernelBuilder kernelBuilder = Kernel.CreateBuilder()
             .AddOpenAIChatCompletion(
                 modelId: TestConfiguration.OpenAI.ChatModelId,
-                apiKey: TestConfiguration.OpenAI.ApiKey)
-            .Build();
+                apiKey: TestConfiguration.OpenAI.ApiKey);
+
+        kernelBuilder.Services.ConfigureHttpClientDefaults(b =>
+                     {
+                         //b.AddStandardResilienceHandler();
+                         b.ConfigurePrimaryHttpMessageHandler(() => new ZhipuAIRedirectingHandler(new HttpClientHandler()));
+                     });
+
+        Kernel kernel = kernelBuilder.Build();
 
         // Example 1. Invoke the kernel with a prompt and display the result
-        Console.WriteLine(await kernel.InvokePromptAsync("What color is the sky?"));
+        Console.WriteLine(await kernel.InvokePromptAsync("What color is the sky? Please answer in Chinese."));
         Console.WriteLine();
 
         // Example 2. Invoke the kernel with a templated prompt and display the result
         KernelArguments arguments = new() { { "topic", "sea" } };
-        Console.WriteLine(await kernel.InvokePromptAsync("What color is the {{$topic}}?", arguments));
+        Console.WriteLine(await kernel.InvokePromptAsync("What color is the {{$topic}}? Please answer in Chinese.", arguments));
         Console.WriteLine();
 
         // Example 3. Invoke the kernel with a templated prompt and stream the results to the display
-        await foreach (var update in kernel.InvokePromptStreamingAsync("What color is the {{$topic}}? Provide a detailed explanation.", arguments))
+        await foreach (var update in kernel.InvokePromptStreamingAsync("What color is the {{$topic}}? Provide a detailed explanation in Chinese.", arguments))
         {
             Console.Write(update);
         }

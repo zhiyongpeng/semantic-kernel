@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System.Globalization;
+using AIProxy;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
@@ -18,8 +19,13 @@ public sealed class Step8_Pipelining(ITestOutputHelper output) : BaseTest(output
     {
         IKernelBuilder builder = Kernel.CreateBuilder();
         builder.AddOpenAIChatCompletion(
-            TestConfiguration.OpenAI.ChatModelId,
-            TestConfiguration.OpenAI.ApiKey);
+            TestConfiguration.ZhipuAI.ChatModelId,
+            TestConfiguration.ZhipuAI.ApiKey);
+
+        builder.Services.ConfigureHttpClientDefaults(b =>
+        {
+            b.ConfigurePrimaryHttpMessageHandler(() => new ZhipuAIRedirectingHandler(new HttpClientHandler()));
+        });
         builder.Services.AddLogging(c => c.AddConsole().SetMinimumLevel(LogLevel.Trace));
         Kernel kernel = builder.Build();
 

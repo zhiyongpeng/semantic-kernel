@@ -20,6 +20,9 @@ public sealed class TestConfiguration
     }
 
     public static OpenAIConfig OpenAI => LoadSection<OpenAIConfig>();
+
+    public static ZhipuAIConfig ZhipuAI => LoadSection<ZhipuAIConfig>();
+
     public static AzureOpenAIConfig AzureOpenAI => LoadSection<AzureOpenAIConfig>();
     public static AzureOpenAIConfig AzureOpenAIImages => LoadSection<AzureOpenAIConfig>();
     public static AzureOpenAIEmbeddingsConfig AzureOpenAIEmbeddings => LoadSection<AzureOpenAIEmbeddingsConfig>();
@@ -68,6 +71,12 @@ public sealed class TestConfiguration
         public string ModelId { get; set; }
         public string ChatModelId { get; set; }
         public string EmbeddingModelId { get; set; }
+        public string ApiKey { get; set; }
+    }
+
+    public class ZhipuAIConfig
+    {
+        public string ChatModelId { get; set; }
         public string ApiKey { get; set; }
     }
 

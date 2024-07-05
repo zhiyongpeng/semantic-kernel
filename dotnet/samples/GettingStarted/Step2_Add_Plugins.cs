@@ -2,6 +2,8 @@
 
 using System.ComponentModel;
 using System.Text.Json.Serialization;
+using AIProxy;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
@@ -24,6 +26,12 @@ public sealed class Step2_Add_Plugins(ITestOutputHelper output) : BaseTest(outpu
         kernelBuilder.AddOpenAIChatCompletion(
                 modelId: TestConfiguration.OpenAI.ChatModelId,
                 apiKey: TestConfiguration.OpenAI.ApiKey);
+
+        kernelBuilder.Services.ConfigureHttpClientDefaults(b =>
+        {
+            b.ConfigurePrimaryHttpMessageHandler(() => new ZhipuAIRedirectingHandler(new HttpClientHandler()));
+        });
+
         kernelBuilder.Plugins.AddFromType<TimeInformation>();
         kernelBuilder.Plugins.AddFromType<WidgetFactory>();
         Kernel kernel = kernelBuilder.Build();

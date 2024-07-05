@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using AIProxy;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
 using Resources;
@@ -18,11 +20,17 @@ public sealed class Step3_Yaml_Prompt(ITestOutputHelper output) : BaseTest(outpu
     public async Task RunAsync()
     {
         // Create a kernel with OpenAI chat completion
-        Kernel kernel = Kernel.CreateBuilder()
+        IKernelBuilder kernelBuilder = Kernel.CreateBuilder()
             .AddOpenAIChatCompletion(
                 modelId: TestConfiguration.OpenAI.ChatModelId,
-                apiKey: TestConfiguration.OpenAI.ApiKey)
-            .Build();
+                apiKey: TestConfiguration.OpenAI.ApiKey);
+
+        kernelBuilder.Services.ConfigureHttpClientDefaults(b =>
+        {
+            b.ConfigurePrimaryHttpMessageHandler(() => new ZhipuAIRedirectingHandler(new HttpClientHandler()));
+        });
+
+        Kernel kernel = kernelBuilder.Build();
 
         // Load prompt from resource
         var generateStoryYaml = EmbeddedResource.Read("GenerateStory.yaml");
