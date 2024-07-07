@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 using System.ComponentModel;
+using AIProxy;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.ChatCompletion;
@@ -19,13 +20,19 @@ public class Step2_Plugins(ITestOutputHelper output) : BaseTest(output)
     [Fact]
     public async Task UseChatCompletionWithPluginAgentAsync()
     {
+        var kernel = Kernel.CreateBuilder()
+         .AddZhipuAIProxyChatCompletion(
+             modelId: TestConfiguration.ZhipuAI.ChatModelId,
+             apiKey: TestConfiguration.ZhipuAI.ApiKey)
+         .Build();
+
         // Define the agent
         ChatCompletionAgent agent =
             new()
             {
                 Instructions = HostInstructions,
                 Name = HostName,
-                Kernel = this.CreateKernelWithChatCompletion(),
+                Kernel = kernel,
                 ExecutionSettings = new OpenAIPromptExecutionSettings() { ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions },
             };
 

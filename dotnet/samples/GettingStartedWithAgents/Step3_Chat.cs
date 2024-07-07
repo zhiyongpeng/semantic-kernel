@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
+using AIProxy;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.Agents.Chat;
@@ -37,12 +38,18 @@ public class Step3_Chat(ITestOutputHelper output) : BaseTest(output)
     public async Task UseAgentGroupChatWithTwoAgentsAsync()
     {
         // Define the agents
+        var kernel = Kernel.CreateBuilder()
+        .AddZhipuAIProxyChatCompletion(
+            modelId: TestConfiguration.ZhipuAI.ChatModelId,
+            apiKey: TestConfiguration.ZhipuAI.ApiKey)
+        .Build();
+
         ChatCompletionAgent agentReviewer =
             new()
             {
                 Instructions = ReviewerInstructions,
                 Name = ReviewerName,
-                Kernel = this.CreateKernelWithChatCompletion(),
+                Kernel = kernel//this.CreateKernelWithChatCompletion(),
             };
 
         ChatCompletionAgent agentWriter =
@@ -50,7 +57,7 @@ public class Step3_Chat(ITestOutputHelper output) : BaseTest(output)
             {
                 Instructions = CopyWriterInstructions,
                 Name = CopyWriterName,
-                Kernel = this.CreateKernelWithChatCompletion(),
+                Kernel = kernel//this.CreateKernelWithChatCompletion(),
             };
 
         // Create a chat for agent interaction.

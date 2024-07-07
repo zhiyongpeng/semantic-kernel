@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
+using AIProxy;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.ChatCompletion;
@@ -18,12 +19,18 @@ public class Step1_Agent(ITestOutputHelper output) : BaseTest(output)
     public async Task UseSingleChatCompletionAgentAsync()
     {
         // Define the agent
+        var kernel = Kernel.CreateBuilder()
+           .AddZhipuAIProxyChatCompletion(
+               modelId: TestConfiguration.ZhipuAI.ChatModelId,
+               apiKey: TestConfiguration.ZhipuAI.ApiKey)
+           .Build();
+
         ChatCompletionAgent agent =
             new()
             {
                 Name = ParrotName,
                 Instructions = ParrotInstructions,
-                Kernel = this.CreateKernelWithChatCompletion(),
+                Kernel = kernel,
             };
 
         /// Create a chat for agent interaction. For more, <see cref="Step3_Chat"/>.

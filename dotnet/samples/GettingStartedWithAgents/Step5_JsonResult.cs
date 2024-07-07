@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
+using AIProxy;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.Agents.Chat;
@@ -30,13 +31,19 @@ public class Step5_JsonResult(ITestOutputHelper output) : BaseTest(output)
     [Fact]
     public async Task UseKernelFunctionStrategiesWithJsonResultAsync()
     {
+        var kernel = Kernel.CreateBuilder()
+      .AddZhipuAIProxyChatCompletion(
+          modelId: TestConfiguration.ZhipuAI.ChatModelId,
+          apiKey: TestConfiguration.ZhipuAI.ApiKey)
+      .Build();
+
         // Define the agents
         ChatCompletionAgent agent =
             new()
             {
                 Instructions = TutorInstructions,
                 Name = TutorName,
-                Kernel = this.CreateKernelWithChatCompletion(),
+                Kernel = kernel//this.CreateKernelWithChatCompletion(),
             };
 
         // Create a chat for agent interaction.

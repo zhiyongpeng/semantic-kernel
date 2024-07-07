@@ -24,12 +24,12 @@ public class Step8_OpenAIAssistant(ITestOutputHelper output) : BaseTest(output)
         OpenAIAssistantAgent agent =
             await OpenAIAssistantAgent.CreateAsync(
                 kernel: new(),
-                config: new(this.ApiKey, this.Endpoint),
+                config: new(TestConfiguration.ZhipuAI.ApiKey, null),
                 new()
                 {
                     Instructions = HostInstructions,
                     Name = HostName,
-                    ModelId = this.Model,
+                    ModelId = TestConfiguration.ZhipuAI.ChatModelId,
                 });
 
         // Initialize plugin and add to the agent's Kernel (same as direct Kernel usage).
